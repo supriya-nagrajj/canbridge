@@ -1,0 +1,60 @@
+/* REMOVE DEFAULT STREAMLIT PADDING */
+.block-container {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
+
+/* FULL PAGE BACKGROUND */
+.stApp {
+    background-color: #9f1f38 !important; /* your BG color */
+}
+
+
+/* Hide Streamlit’s default page navigation sidebar */
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
+/* WELCOME HEADER */
+.welcome {
+    margin-top: 40px;
+    font-size: 38px;
+    font-weight: 900;
+    text-align: center;
+    color: #ffffff;
+}
+
+/* QUOTE */
+.quote {
+    font-size: 24px;
+    font-weight: 600;
+    color: #f3f3f3;
+    text-align: center;
+    margin-top: -5px;
+    margin-bottom: 35px;
+    font-style: italic;
+}
+
+/* DASHBOARD CARDS */
+.card {
+    background-color: #ffffff;
+    padding: 22px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    margin-bottom: 25px;
+}
+
+.card-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #2B2B2B;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2B2B2B;
+    line-height: 1.5;
+}
