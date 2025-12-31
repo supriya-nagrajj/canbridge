@@ -32,7 +32,7 @@ def sidebar():
         st.page_link("pages/5_warriors.py", label="🌟 Warrior Stories")
         st.page_link("pages/6_financialaid.py", label="💰 Financial Aid")
         st.page_link("pages/7_information.py", label="ℹ️ Information")
-
+        st.page_link("pages/8_history.py", label="📜 History")
         st.markdown(
             "<hr style='border: 1px solid #ccc; margin-top:10px; margin-bottom:10px;'>",
             unsafe_allow_html=True

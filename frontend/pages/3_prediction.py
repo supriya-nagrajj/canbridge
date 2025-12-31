@@ -1,7 +1,10 @@
-# pages/3_prediction.py
+# frontend/pages/3_prediction.py
+
 import streamlit as st
+import requests
 import os
 from components.sidebar import sidebar
+from config import BACKEND_URL
 
 # -------------------------------
 # PAGE CONFIG
@@ -13,7 +16,7 @@ st.set_page_config(
 )
 
 # -------------------------------
-# LOAD EXTERNAL CSS (if exists)
+# LOAD EXTERNAL CSS
 # -------------------------------
 current_dir = os.path.dirname(os.path.abspath(__file__))
 app_dir = os.path.dirname(current_dir)
@@ -24,34 +27,29 @@ if os.path.exists(css_path):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # -------------------------------
-# HIDE DEFAULT STREAMLIT SIDEBAR PAGE NAV
+# HIDE DEFAULT STREAMLIT NAV
 # -------------------------------
-st.markdown(
-    """
-    <style>
-    [data-testid="stSidebarNav"] { display: none !important; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown("""
+<style>
+[data-testid="stSidebarNav"] { display: none !important; }
+</style>
+""", unsafe_allow_html=True)
 
 # -------------------------------
-# SIDEBAR NAVIGATION
+# SIDEBAR
 # -------------------------------
 sidebar()
+
 # -------------------------------
 # HEADER
 # -------------------------------
-st.write("")
-st.write("")
-
 st.markdown(
     """
-    <h1 style='text-align:center; color:white; margin-top: 20px;'>
-    🧬 Cancer Prediction
+    <h1 style='text-align:center; color:white;'>
+        🧬 Cancer Prediction
     </h1>
-    <p style='text-align:center; color:#ffeaea; font-size:18px; margin-top:-10px;'>
-    Upload a medical image and receive an AI-assisted observation.
+    <p style='text-align:center; color:#ffeaea; font-size:18px;'>
+        Upload a medical image and receive an AI-assisted observation.
     </p>
     """,
     unsafe_allow_html=True,
@@ -60,147 +58,133 @@ st.markdown(
 st.write("")
 
 # -------------------------------
-# CANCER TYPE CARD SELECTION
+# SESSION STATE
 # -------------------------------
-st.markdown("<h3 style='color:white; margin-bottom:10px;'>Select Cancer Type</h3>", unsafe_allow_html=True)
-
-st.markdown(
-    """
-    <style>
-    .select-card {
-        background-color: #ffffff;
-        color: #9f1f38;
-        font-weight: 900;
-        border-radius: 15px;
-        padding: 22px;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
-    .select-card:hover {
-        background-color: #ffe6ea;
-        transform: translateY(-3px);
-    }
-    .selected-card {
-        border: 4px solid #ffd353;
-        background-color: #fff6d6 !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-# state for selected cancer
 if "selected_cancer" not in st.session_state:
-    st.session_state["selected_cancer"] = None
+    st.session_state.selected_cancer = None
 
-def select(label):
-    st.session_state["selected_cancer"] = label
+if "prediction_result" not in st.session_state:
+    st.session_state.prediction_result = None
+
+# -------------------------------
+# CANCER TYPE SELECTION
+# -------------------------------
+st.markdown(
+    "<h3 style='color:white;'>Select Cancer Type</h3>",
+    unsafe_allow_html=True
+)
 
 col1, col2, col3 = st.columns(3, gap="large")
 
 with col1:
-    if st.button("🩺 Breast Cancer\n(Histopathology)", use_container_width=True):
-        select("breast")
+    if st.button("🩺 Breast Cancer", use_container_width=True):
+        st.session_state.selected_cancer = "breast"
 
 with col2:
-    if st.button("🧠 Brain Tumor\n(MRI)", use_container_width=True):
-        select("brain")
+    if st.button("🧠 Brain Tumor", use_container_width=True):
+        st.session_state.selected_cancer = "brain"
 
 with col3:
-    if st.button("🫁 Lung Cancer\n(Image)", use_container_width=True):
-        select("lung")
+    if st.button("🫁 Lung Cancer", use_container_width=True):
+        st.session_state.selected_cancer = "lung"
 
-st.write("")
-
-if st.session_state["selected_cancer"]:
+# -------------------------------
+# SHOW SELECTED CANCER TYPE (RESTORED)
+# -------------------------------
+if st.session_state.selected_cancer:
     st.markdown(
-        "<p style='color:white; font-size:18px; font-weight:700;'>Selected: "
-        + st.session_state["selected_cancer"].capitalize()
-        + "</p>",
+        f"""
+        <p style="color:white; font-size:18px; font-weight:700; margin-top:10px;">
+            Selected: {st.session_state.selected_cancer.capitalize()} Cancer
+        </p>
+        """,
         unsafe_allow_html=True,
     )
+
+st.write("")
 
 # -------------------------------
 # IMAGE UPLOAD
 # -------------------------------
 uploaded_image = st.file_uploader(
-    "Upload Image", type=["jpg", "jpeg", "png"], disabled=(st.session_state["selected_cancer"] is None)
+    "Upload Image",
+    type=["jpg", "jpeg", "png"],
+    disabled=(st.session_state.selected_cancer is None)
 )
 
 if uploaded_image:
-    # show a smaller preview to avoid huge images
-    st.image(uploaded_image, caption="Uploaded Image Preview", width=350)
+    st.image(uploaded_image, width=350)
 
 st.write("")
 
 # -------------------------------
-# PREDICT BUTTON
+# RUN PREDICTION
 # -------------------------------
-predict_btn = st.button("🔍 Run Prediction", use_container_width=True, disabled=(uploaded_image is None))
+if st.button("🔍 Run Prediction", disabled=(uploaded_image is None)):
+
+    with st.spinner("Running prediction..."):
+        files = {"file": uploaded_image}
+        url = f"{BACKEND_URL}/predict/{st.session_state.selected_cancer}"
+        response = requests.post(url, files=files)
+
+    if response.status_code == 200:
+        st.session_state.prediction_result = response.json()
+    else:
+        st.error("Prediction failed. Please try again.")
 
 # -------------------------------
-# RESULT DISPLAY
+# DISPLAY RESULT
 # -------------------------------
-if predict_btn:
+if st.session_state.prediction_result:
 
-    # TEMP VALUES
-    result = "Cancer Detected"      # later replaced by model
-    confidence = "89%"              # later replaced by model
+    result = st.session_state.prediction_result
+    confidence_pct = round(result["confidence"] * 100, 2)
 
-    conf_val = int(confidence.replace("%", ""))
-    confidence_color = "#28a745" if conf_val >= 85 else "#f0ad4e" if conf_val >= 60 else "#d9534f"
-
-    # ——— CLEAN RESULT HTML ———
-    result_html = """
-    <div style="
-        background-color:white;
-        border-radius:15px;
-        padding:30px;
-        box-shadow:0 4px 14px rgba(0,0,0,0.35);
-        margin-top:30px;
-        text-align:center;
-    ">
-        <h2 style="color:#9f1f38; font-size:32px; margin-bottom:20px;">
-            {result_text}
-        </h2>
-        <h2 style="color:#9f1f38; font-size:32px; margin-bottom:20px;">
-            {conf_value} Confidence
-        </h2>
-
-        
-    </div>
-    """.format(
-        result_text=result,
-        conf_color=confidence_color,
-        conf_value=confidence
+    st.markdown(
+        f"""
+        <div style="
+            background-color:white;
+            border-radius:15px;
+            padding:30px;
+            box-shadow:0 4px 14px rgba(0,0,0,0.35);
+            margin-top:30px;
+            text-align:center;
+        ">
+            <h2 style="color:#9f1f38; font-size:32px;">
+                {result['prediction']}
+            </h2>
+            <h3 style="color:#9f1f38;">
+                Confidence: {confidence_pct}%
+            </h3>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-    # ——— DISPLAY RESULT ———
-    st.markdown(result_html, unsafe_allow_html=True)
+    st.write("")
 
-    # ACTION BUTTONS
-    # ---------------------------
-    st.write("")  # spacing
     colA, colB = st.columns(2, gap="large")
-    colC, colD = st.columns(2, gap="large")
 
+    # -------------------------------
+    # GENERATE CARE PLAN (PDF)
+    # -------------------------------
     with colA:
-        st.button("📄 Download Care Roadmap (PDF)", use_container_width=True)
+        if st.button("📄 Generate Care Plan", use_container_width=True):
+            report_url = f"{BACKEND_URL}/report/{result['prediction_id']}"
+            st.markdown(
+                f"[Click here to download your care plan]({report_url})",
+                unsafe_allow_html=True
+            )
 
+    # -------------------------------
+    # SAVED INDICATOR
+    # -------------------------------
     with colB:
-        st.button("💬 Talk to the Community", use_container_width=True)
+        st.button("💾 Saved to History", use_container_width=True, disabled=True)
 
-    with colC:
-        st.button("🌐 Explore Support Resources", use_container_width=True)
-
-    with colD:
-        st.button("💾 Save to History", use_container_width=True)
-
-    # ---------------------------
+    # -------------------------------
     # DISCLAIMER
-    # ---------------------------
+    # -------------------------------
     st.markdown(
         """
         <div style="
