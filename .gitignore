@@ -19,6 +19,8 @@ models/
 uploads/
 media/
 backend/app/reports/
+backend/app/database/*.db
+
 
 *.log
 .cache/
