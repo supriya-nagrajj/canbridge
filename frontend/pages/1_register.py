@@ -1,13 +1,15 @@
 import streamlit as st
+import requests
+from config import BACKEND_URL
 
-# ---- PAGE CONFIG ----
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="Register | CanBridge",
     page_icon="🩺",
     layout="centered"
 )
 
-# ---- BACKGROUND & THEME CSS (exact same as login) ----
+# ---------------- BACKGROUND CSS ----------------
 bg_url = "https://images.pexels.com/photos/9486838/pexels-photo-9486838.jpeg?_gl=1*1blifdf*_ga*MTgyNDA1NzE2NS4xNzYzMjc4NzA2*_ga_8JE65Q40S6*czE3NjMyNzg3MDYkbzEkZzEkdDE3NjMyODA0MDQkajQ1JGwwJGgw"
 
 st.markdown(
@@ -19,81 +21,61 @@ st.markdown(
         background-position: center;
         background-repeat: no-repeat;
     }}
-
     .logo {{
         text-align: center;
-        margin-bottom: 10px;
         font-size: 80px;
         font-weight: bold;
-        color: #ffffff;
-        text-shadow: 3px 3px 0px #1A1A1A;
+        color: white;
     }}
-
     .register-head {{
-        color: #ffffff;
+        color: white;
         font-size: 30px;
         font-weight: bold;
         text-align: center;
-    }}
-
-    .stTextInput label {{
-        color: #ffffff !important;
-        font-weight: 900 !important;
-        font-size: 20px !important;
-    }}
-
-    .stButton button {{
-        background-color: #ffffff !important;
-        color: #2B2B2B !important;
-        font-size: 20px !important;
-        font-weight: 900 !important;
-        border-radius: 10px !important;
-        width: 100% !important;
-        margin-top: 20px !important;
-    }}
-
-    .login-link {{
-        text-align: center;
-        margin-top: 15px;
-        color: #ffffff;
-        font-weight: 600;
-    }}
-
-    .login-link a {{
-        color: #ffd353;
-        text-decoration: none;
-        font-weight: 800;
-        font-size: 18px;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# ---- HEADER LOGO ----
+# ---------------- HEADER ----------------
 st.markdown("<div class='logo'>CanBridge</div>", unsafe_allow_html=True)
+st.markdown("<div class='register-head'>Create Your Account</div>", unsafe_allow_html=True)
 
-# ---- REGISTRATION CARD ----
-with st.container():
-    st.markdown("<div class='login-card'>", unsafe_allow_html=True)
+# ---------------- FORM ----------------
+full_name = st.text_input("Full Name", )
+email = st.text_input("Email")
+phone = st.text_input("Phone Number")
+username = st.text_input("Username")
+password = st.text_input("Password", type="password")
+confirm = st.text_input("Confirm Password", type="password")
 
-    st.markdown("<div class='register-head'>Create Your Account</div>", unsafe_allow_html=True)
+if st.button("Register", use_container_width=True):
 
-    full_name = st.text_input("Full Name", placeholder="Enter your full name")
-    email = st.text_input("Email", placeholder="Enter email address")
-    phone = st.text_input("Phone Number", placeholder="Enter phone number")
-    username = st.text_input("Username", placeholder="Choose a username")
-    password = st.text_input("Password", type="password", placeholder="Create password")
-    confirm = st.text_input("Confirm Password", type="password", placeholder="Re-enter password")
+    if not username or not email or not password:
+        st.error("Username, email, and password are required.")
+    elif password != confirm:
+        st.error("Passwords do not match.")
+    else:
+        try:
+            response = requests.post(
+                f"{BACKEND_URL}/auth/register",
+                json={
+                    "username": username,
+                    "email": email,
+                    "password": password
+                },
+                timeout=5
+            )
 
-    if st.button("Register", use_container_width=True):
-        if password != confirm:
-            st.error("Passwords do not match!")
-        else:
-            # TODO: Send data to FastAPI
-            st.success("Account created successfully!")
+            if response.status_code == 200:
+                st.success("Account created successfully. Please login.")
+                st.switch_page("main.py")
+            else:
+                st.error(response.json().get("detail", "Registration failed."))
 
-    st.markdown("</div>", unsafe_allow_html=True)
+        except Exception as e:
+            st.error(f"Backend not reachable: {e}")
 
-# ---- BACK TO LOGIN ----
+# ---------------- BACK TO LOGIN ----------------
 st.page_link("main.py", label="Already have an account? Login here")

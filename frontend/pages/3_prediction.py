@@ -15,6 +15,11 @@ st.set_page_config(
     layout="wide"
 )
 
+# ---------------- SESSION GUARD ----------------
+if not st.session_state.get("logged_in"):
+    st.switch_page("main.py")
+ 
+
 # -------------------------------
 # LOAD EXTERNAL CSS
 # -------------------------------

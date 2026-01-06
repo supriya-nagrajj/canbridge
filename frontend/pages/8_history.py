@@ -1,3 +1,6 @@
+# frontend/pages/8_history.py
+
+
 import streamlit as st
 import requests
 import os
@@ -14,6 +17,11 @@ st.set_page_config(
     page_icon="📜",
     layout="wide"
 )
+
+# ---------------- SESSION GUARD ----------------
+if not st.session_state.get("logged_in"):
+    st.switch_page("main.py")
+ 
 
 # -------------------------------
 # LOAD EXTERNAL CSS (if exists)

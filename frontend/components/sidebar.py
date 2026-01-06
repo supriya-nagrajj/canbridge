@@ -28,7 +28,7 @@ def sidebar():
         # ---- MAIN NAV ----
         st.page_link("pages/2_home.py", label="🏠 Home")
         st.page_link("pages/3_prediction.py", label="🧬 Predict")
-        st.page_link("pages/4_forum.py", label="💬 Forums")
+        st.page_link("pages/4_forum.py", label="💬 Support Hub")
         st.page_link("pages/5_warriors.py", label="🌟 Warrior Stories")
         st.page_link("pages/6_financialaid.py", label="💰 Financial Aid")
         st.page_link("pages/7_information.py", label="ℹ️ Information")
@@ -41,3 +41,21 @@ def sidebar():
         # Optional extra pages (disabled for now)
         # st.page_link("pages/7_faq.py", label="❓ FAQ")
         # st.page_link("pages/8_about.py", label="ℹ️ About CanBridge")
+
+        # ---------------- USER INFO ----------------
+        if st.session_state.get("user"):
+            st.markdown(
+                f"👤 **{st.session_state['user']['username']}**",
+                unsafe_allow_html=True
+            )
+
+        # ---------------- LOGOUT ----------------
+        if st.button("🚪 Logout", use_container_width=True):
+            st.session_state.clear()
+            st.switch_page("main.py")
+        
+
+
+
+
+

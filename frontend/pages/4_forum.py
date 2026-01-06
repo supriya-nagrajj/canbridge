@@ -1,19 +1,31 @@
-# pages/4_forum.py
+# frontend/pages/4_forum.py
+
 import streamlit as st
 import os
-import streamlit.components.v1 as components
 from components.sidebar import sidebar
+
 # -------------------------------
 # PAGE CONFIG
 # -------------------------------
 st.set_page_config(
-    page_title="Support Forums | CanBridge",
+    page_title="Support Communities | CanBridge",
     page_icon="💬",
     layout="wide"
 )
 
 # -------------------------------
-# LOAD EXTERNAL CSS (optional)
+# SESSION GUARD
+# -------------------------------
+if not st.session_state.get("logged_in"):
+    st.switch_page("main.py")
+
+# -------------------------------
+# SIDEBAR
+# -------------------------------
+sidebar()
+
+# -------------------------------
+# LOAD EXTERNAL CSS
 # -------------------------------
 current_dir = os.path.dirname(os.path.abspath(__file__))
 app_dir = os.path.dirname(current_dir)
@@ -24,157 +36,184 @@ if os.path.exists(css_path):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # -------------------------------
-# SIDEBAR NAV
+# GLOBAL RESPONSIVE VIDEO CSS
 # -------------------------------
-sidebar()
+st.markdown(
+    """
+    <style>
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 */
+    }
+
+    .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # -------------------------------
 # PAGE HEADER
 # -------------------------------
 st.markdown(
     """
-    <h1 style='text-align:center; color:white; margin-top:40px;'>
-        💬 Support Communities
-    </h1>
-    <p style='text-align:center; color:#ffeaea; font-size:18px; margin-top:-10px;'>
-        Chat with others who understand your journey
-    </p>
+    <div style="text-align:center; margin-top:20px;">
+        <h1 style="color:white;">💬 Support & Community Hub</h1>
+        <p style="color:#ffeaea; font-size:18px; max-width:900px; margin:auto;">
+            Connect with trusted communities and survivor stories across platforms
+            where real support and conversations already exist.
+        </p>
+    </div>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
+)
+
+st.write("")
+st.write("")
+
+# ======================================================
+# SECTION 1 — COMMUNITY SUPPORT
+# ======================================================
+st.markdown(
+    "<h2 style='color:white; text-align:center; margin-top:40px;'>🤝 Community Support Groups</h2>",
+    unsafe_allow_html=True
+)
+
+communities = {
+    "🩺 Breast Cancer": [
+        ("👽 Reddit", "https://www.reddit.com/r/breastcancer/"),
+        ("📨 Telegram", "https://t.me/s/breastcancer_support"),
+        ("💚 WhatsApp", "https://chat.whatsapp.com/"),
+        ("🎥 YouTube", "https://www.youtube.com/@breastcancerorg")
+    ],
+    "🧠 Brain Tumor": [
+        ("👽 Reddit", "https://www.reddit.com/r/braintumor/"),
+        ("📨 Telegram", "https://t.me/s/braincancer"),
+        ("💚 WhatsApp", "https://chat.whatsapp.com/"),
+        ("🎥 YouTube", "https://www.youtube.com/results?search_query=brain+tumor+survivor")
+    ],
+    "🫁 Lung Cancer": [
+        ("👽 Reddit", "https://www.reddit.com/r/lungcancer/"),
+        ("📨 Telegram", "https://t.me/s/lungcancer"),
+        ("💚 WhatsApp", "https://chat.whatsapp.com/"),
+        ("🎥 YouTube", "https://www.youtube.com/results?search_query=lung+cancer+survivor")
+    ]
+}
+
+for cancer, links in communities.items():
+    st.markdown(
+        f"<h3 style='color:white; margin-top:35px; text-align:center;'>{cancer}</h3>",
+        unsafe_allow_html=True
+    )
+
+    cols = st.columns(4, gap="large")
+
+    for col, (label, link) in zip(cols, links):
+        with col:
+            st.markdown(
+                f"""
+                    <div style="
+                    background:white;
+                    border-radius:16px;
+                    padding:22px;
+                    text-align:center;
+                    box-shadow:0 6px 18px rgba(0,0,0,0.2);
+                    ">
+                    <h4 style="color:#9f1f38;">{label}</h4>
+                    <a href="{link}" target="_blank">
+                        <button style="
+                            background:#9f1f38;
+                            color:white;
+                            border:none;
+                            padding:10px 16px;
+                            border-radius:10px;
+                            font-weight:800;
+                            margin-top:10px;
+                            cursor:pointer;
+                        ">
+                            🔗 Explore Support
+                        </button>
+                    </a>
+                    </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+# ======================================================
+# SECTION 2 — SURVIVOR STORIES (RESPONSIVE)
+# ======================================================
+st.markdown(
+    "<h2 style='color:white; text-align:center; margin-top:60px;'>🎥 Survivor Stories & Experiences</h2>",
+    unsafe_allow_html=True
 )
 
 st.write("")
 
-# -------------------------------
-# CATEGORY BUTTONS
-# -------------------------------
-st.markdown("<h3 style='color:white;'>Choose a Community</h3>", unsafe_allow_html=True)
+yt_cols = st.columns(2, gap="large")
 
-c1, c2, c3, c4 = st.columns(4, gap="large")
-
-breast = c1.button("🩺 Breast Cancer", use_container_width=True)
-brain  = c2.button("🧠 Brain Tumor", use_container_width=True)
-lung   = c3.button("🫁 Lung Cancer", use_container_width=True)
-liver  = c4.button("🩸 Liver Cancer", use_container_width=True)
-
-st.write("")
-
-# -------------------------------
-# DUMMY CHAT DATA
-# -------------------------------
-breast_msgs = [
-    {"user": "other", "text": "Welcome everyone, feel free to share your experiences."},
-    {"user": "you",   "text": "I’m new here, thank you for welcoming me."},
-    {"user": "other", "text": "We’re here for you ❤️"},
-]
-
-brain_msgs = [
-    {"user": "other", "text": "MRI weeks are always stressful."},
-    {"user": "you",   "text": "I agree… but this group helps me feel less alone."},
-]
-
-lung_msgs = [
-    {"user": "other", "text": "Breathing exercises helped me after treatment."},
-    {"user": "you",   "text": "Could you share which routine you follow?"},
-]
-
-liver_msgs = [
-    {"user": "other", "text": "Staying hydrated made a big difference for me."},
-    {"user": "you",   "text": "Thanks, I’ll try increasing my water intake."},
-]
-
-# -------------------------------
-# CHAT WINDOW RENDERER
-# -------------------------------
-def render_chat_window(title, messages):
-
+with yt_cols[0]:
     st.markdown(
-        f"<h3 style='color:white; margin-bottom:10px;'>{title} Community Chat</h3>",
+        """
+        <div style="background:white; border-radius:18px; padding:20px; box-shadow:0 6px 18px rgba(0,0,0,0.2);">
+            <h4 style="color:#9f1f38;">🎗 Breast Cancer Survivor Story</h4>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/q8j_vZRZKx0"
+                        allowfullscreen></iframe>
+            </div>
+            <p style="color:#444; font-size:15px; margin-top:10px;">
+                A survivor shares her diagnosis, treatment, and recovery journey.
+            </p>
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
-    # Build HTML for chat window (inside ONE HTML component)
-    chat_html = """
-    <div class='chat-window'>
-    """
-
-    for m in messages:
-        bubble_class = "right-msg" if m["user"] == "you" else "left-msg"
-        chat_html += f"""
-        <div class="chat-msg {bubble_class}">
-            {m['text']}
-        </div>
+with yt_cols[1]:
+    st.markdown(
         """
-
-    chat_html += "</div>"
-
-    # Render as a component so HTML does NOT break
-    components.html(
-        f"""
-        <style>
-        .chat-window {{
-            background: white;
-            height: 500px;
-            border-radius: 14px;
-            padding: 18px;
-            overflow-y: auto;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-        }}
-        .chat-msg {{
-            padding: 12px 18px;
-            border-radius: 16px;
-            max-width: 20%;
-            font-size: 15px;
-            line-height: 1.4;
-            margin-bottom: 14px;
-        }}
-        .left-msg {{
-            background: #f7f7f7;
-            color: #333;
-            border-bottom-left-radius: 4px;
-            text-align: left;
-        }}
-        .right-msg {{
-            background: #9f1f38;
-            color: white;
-            border-bottom-right-radius: 4px;
-            margin-left: auto;
-            text-align: left;
-        }}
-        .msg-composer {{
-            background: white;
-            border-radius: 12px;
-            padding: 14px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-        }}
-        </style>
-        {chat_html}
+        <div style="background:white; border-radius:18px; padding:20px; box-shadow:0 6px 18px rgba(0,0,0,0.2);">
+            <h4 style="color:#9f1f38;">💬 Living Through Cancer Treatment</h4>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/6NsJZL9CX40"
+                        allowfullscreen></iframe>
+            </div>
+            <p style="color:#444; font-size:15px; margin-top:10px;">
+                Honest conversations about treatment side effects and mental resilience.
+            </p>
+        </div>
         """,
-        height=550,
-        scrolling=True
+        unsafe_allow_html=True
     )
 
-    # Message composer below chat window
-    st.write("")
-    st.markdown("<div class='msg-composer'>", unsafe_allow_html=True)
-    st.text_area("Type your message…", height=90)
-    st.button("Send", use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# -------------------------------
-# SHOW THE SELECTED CHAT
-# -------------------------------
-if breast:
-    render_chat_window("Breast Cancer", breast_msgs)
-
-elif brain:
-    render_chat_window("Brain Tumor", brain_msgs)
-
-elif lung:
-    render_chat_window("Lung Cancer", lung_msgs)
-
-elif liver:
-    render_chat_window("Liver Cancer", liver_msgs)
-
-else:
-    st.info("Select a community above to open the chat.", icon="💬")
+# ======================================================
+# DISCLAIMER
+# ======================================================
+st.markdown(
+    """
+    <div style="
+        margin-top:60px;
+        background:white;
+        color:#9f1f38;
+        padding:22px;
+        border-radius:14px;
+        text-align:center;
+        font-weight:800;
+        box-shadow:0 4px 12px rgba(0,0,0,0.25);
+        max-width:950px;
+        margin-left:auto;
+        margin-right:auto;
+    ">
+        ⚠️ Community discussions and videos are for emotional support and awareness only.  
+        Always consult qualified medical professionals for diagnosis and treatment decisions.
+    </div>
+    """,
+    unsafe_allow_html=True
+)

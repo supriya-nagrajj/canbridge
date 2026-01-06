@@ -1,9 +1,10 @@
 # backend/app/main.py
 
 from fastapi import FastAPI
-
+from app.routes import warrior_stories
 from app.routes import predict, history, report
 from app.services.db import init_db
+from app.routes.auth import router as auth_router
 
 app = FastAPI(
     title="CanBridge Backend API",
@@ -20,3 +21,5 @@ def startup_event():
 app.include_router(predict.router)
 app.include_router(history.router)
 app.include_router(report.router)
+app.include_router(warrior_stories.router)
+app.include_router(auth_router)
