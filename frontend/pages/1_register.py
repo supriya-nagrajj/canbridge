@@ -52,8 +52,8 @@ confirm = st.text_input("Confirm Password", type="password")
 
 if st.button("Register", use_container_width=True):
 
-    if not username or not email or not password:
-        st.error("Username, email, and password are required.")
+    if not username or not email or not password or not full_name or not phone:
+        st.error("All fields are required.")
     elif password != confirm:
         st.error("Passwords do not match.")
     else:

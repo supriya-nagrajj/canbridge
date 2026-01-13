@@ -129,6 +129,41 @@ else:
             <p>Stories of courage and hope will appear here.</p>
         </div>
     """, unsafe_allow_html=True)
+# ==================================================
+# 💖 LOVE RECEIVED
+# ==================================================
+st.markdown("<div class='section-title'>💖 Updates</div>", unsafe_allow_html=True)
+
+love_updates = []
+try:
+    res = requests.get(
+        f"{BACKEND_URL}/stories/love/received",
+        params={"username": username},
+        timeout=5
+    )
+    if res.status_code == 200:
+        love_updates = res.json()
+except:
+    love_updates = []
+
+if not love_updates:
+    st.markdown("""
+        <div class='card'>
+            <p>No new love yet.</p>
+            <p>Your stories will receive support here ❤️</p>
+        </div>
+    """, unsafe_allow_html=True)
+else:
+    for item in love_updates:
+        st.markdown(f"""
+            <div class='card'>
+                <p>
+                    💖 You received love on <b>“{item['story_title']}”</b><br>
+                    From <b>{item['count']} supporter(s)</b>
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+
 
 # ==================================================
 # 📌 RECENT ACTIVITY

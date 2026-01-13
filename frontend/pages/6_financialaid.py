@@ -123,7 +123,7 @@ with gov_tab:
             <p><span class="fin-label">Geographic coverage:</span> Pan-India (through Regional Cancer Centres & major government hospitals).</p>
             <p><span class="fin-label">Financial support:</span> Case-dependent grants; often substantial for surgery, chemotherapy, or radiation.</p>
             <p><span class="fin-label">How patients access it:</span> Applications are routed through the treating government hospital’s medical superintendent or social work department.</p>
-            <p class="fin-link"><a href="https://www.mohfw.gov.in" target="_blank">Ministry of Health & Family Welfare</a></p>
+            <p class="fin-link">Visit : <a href="https://www.mohfw.gov.in" target="_blank">Ministry of Health & Family Welfare</a></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -136,7 +136,7 @@ with gov_tab:
             <p><span class="fin-label">Geographic coverage:</span> Pan-India (only at empanelled hospitals).</p>
             <p><span class="fin-label">Financial support:</span> Coverage up to ₹5 lakh per family per year.</p>
             <p><span class="fin-label">How patients access it:</span> Enrollment and treatment occur directly at Ayushman-empanelled hospitals.</p>
-            <p class="fin-link"><a href="https://pmjay.gov.in" target="_blank">Official PM-JAY Portal</a></p>
+            <p class="fin-link">Visit : <a href="https://pmjay.gov.in" target="_blank">Official PM-JAY Portal</a></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -151,7 +151,7 @@ with gov_tab:
             <p><span class="fin-label">Primary locations:</span> Pan-India.</p>
             <p><span class="fin-label">Type of support:</span> Direct financial grants (amount decided case-wise).</p>
             <p><span class="fin-label">How to approach:</span> Online application with medical and income documentation.</p>
-            <p class="fin-link"><a href="https://www.pmindia.gov.in/en/pms-funds/" target="_blank">PMNRF Official Portal</a></p>
+            <p class="fin-link">Visit : <a href="https://www.pmindia.gov.in/en/pms-funds/" target="_blank">PMNRF Official Portal</a></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -164,7 +164,7 @@ with gov_tab:
             <p><span class="fin-label">Primary locations:</span> Respective Indian states.</p>
             <p><span class="fin-label">Type of support:</span> Partial or full treatment cost reimbursement (case-dependent).</p>
             <p><span class="fin-label">How to approach:</span> Application through state health departments or government hospitals.</p>
-            <p class="fin-link"><a href="https://www.nhp.gov.in" target="_blank">National Health Portal (India)</a></p>
+            <p class="fin-link">Visit : <a href="https://www.nhp.gov.in" target="_blank">National Health Portal (India)</a></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -185,7 +185,7 @@ with ngo_tab:
             <p><span class="fin-label">Primary locations:</span> Mumbai and nearby regions.</p>
             <p><span class="fin-label">Type of support:</span> Assistance for treatment costs, diagnostics, and medicines (case-based).</p>
             <p><span class="fin-label">How to approach:</span> Referral via hospital social worker or direct application.</p>
-            <p class="fin-link"><a href="https://cancer.org.in" target="_blank">cancer.org.in</a></p>
+            <p class="fin-link">Visit : <a href="https://cancer.org.in" target="_blank">cancer.org.in</a></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -198,7 +198,7 @@ with ngo_tab:
             <p><span class="fin-label">Coverage:</span> Multiple states across India.</p>
             <p><span class="fin-label">Type of support:</span> Treatment and diagnostic cost assistance.</p>
             <p><span class="fin-label">How to approach:</span> Application with income proof and medical documents.</p>
-            <p class="fin-link"><a href="https://www.indiancancersociety.org" target="_blank">indiancancersociety.org</a></p>
+            <p class="fin-link">Visit : <a href="https://www.indiancancersociety.org" target="_blank">indiancancersociety.org</a></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -213,7 +213,7 @@ with ngo_tab:
             <p><span class="fin-label">Primary locations:</span> Pan-India (through partner hospitals).</p>
             <p><span class="fin-label">Type of support:</span> Case-based financial grants toward treatment costs.</p>
             <p><span class="fin-label">How to approach:</span> Referral via hospital or partnered NGOs.</p>
-            <p class="fin-link"><a href="https://www.tatatrusts.org" target="_blank">tatatrusts.org</a></p>
+            <p class="fin-link">Visit : <a href="https://www.tatatrusts.org" target="_blank">tatatrusts.org</a></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -226,7 +226,7 @@ with ngo_tab:
             <p><span class="fin-label">Primary locations:</span> Multiple cities across India.</p>
             <p><span class="fin-label">Type of support:</span> Treatment funding, diagnostics, and supportive care.</p>
             <p><span class="fin-label">How to approach:</span> Referral through partner hospitals or direct NGO contact.</p>
-            <p class="fin-link"><a href="https://cankidsindia.org" target="_blank">cankidsindia.org</a></p>
+            <p class="fin-link">Visit : <a href="https://cankidsindia.org" target="_blank">cankidsindia.org</a></p>
         </div>
         """, unsafe_allow_html=True)
 

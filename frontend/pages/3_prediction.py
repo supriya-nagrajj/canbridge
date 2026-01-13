@@ -1,5 +1,3 @@
-# frontend/pages/3_prediction.py
-
 import streamlit as st
 import requests
 import os
@@ -18,7 +16,6 @@ st.set_page_config(
 # ---------------- SESSION GUARD ----------------
 if not st.session_state.get("logged_in"):
     st.switch_page("main.py")
- 
 
 # -------------------------------
 # LOAD EXTERNAL CSS
@@ -71,6 +68,9 @@ if "selected_cancer" not in st.session_state:
 if "prediction_result" not in st.session_state:
     st.session_state.prediction_result = None
 
+if "confirm_input" not in st.session_state:
+    st.session_state.confirm_input = False
+
 # -------------------------------
 # CANCER TYPE SELECTION
 # -------------------------------
@@ -84,17 +84,20 @@ col1, col2, col3 = st.columns(3, gap="large")
 with col1:
     if st.button("🩺 Breast Cancer", use_container_width=True):
         st.session_state.selected_cancer = "breast"
+        st.session_state.confirm_input = False
 
 with col2:
     if st.button("🧠 Brain Tumor", use_container_width=True):
         st.session_state.selected_cancer = "brain"
+        st.session_state.confirm_input = False
 
 with col3:
-    if st.button("🫁 Lung Cancer", use_container_width=True):
-        st.session_state.selected_cancer = "lung"
+    if st.button("🖐🏻 Skin Cancer", use_container_width=True):
+        st.session_state.selected_cancer = "skin"
+        st.session_state.confirm_input = False
 
 # -------------------------------
-# SHOW SELECTED CANCER TYPE (RESTORED)
+# SHOW SELECTED CANCER TYPE
 # -------------------------------
 if st.session_state.selected_cancer:
     st.markdown(
@@ -107,6 +110,57 @@ if st.session_state.selected_cancer:
     )
 
 st.write("")
+
+# ==================================================
+# 📋 INPUT INSTRUCTIONS (NEW — SAFE ADDITION)
+# ==================================================
+if st.session_state.selected_cancer:
+
+    if st.session_state.selected_cancer == "breast":
+        instructions = """
+        ✔ Upload a **breast ultrasound image**  
+        ✔ Lesion should be clearly visible  
+        ✖ Do NOT upload MRI, CT, X-ray, reports, or phone photos  
+        """
+
+    elif st.session_state.selected_cancer == "brain":
+        instructions = """
+        ✔ Upload a **brain MRI scan**  
+        ✔ Axial / sagittal / coronal views are acceptable  
+        ✖ Do NOT upload CT scans, X-rays, or reports  
+        """
+
+    else:  # skin
+        instructions = """
+        ✔ Upload a **dermatoscopic image** of a skin lesion  
+        ✔ Close-up, well-lit lesion preferred  
+        ✖ Do NOT upload selfies or normal skin photos  
+        """
+
+    st.markdown(
+        f"""
+            <div style="
+            background-color:white;
+            border-radius:14px;
+            padding:20px;
+            margin-bottom:15px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.3);
+            color:#9f1f38;
+            font-size:15px;
+            ">
+                <b>📋 Image Upload Guidelines</b><br><br>
+                {instructions}  <br>
+                <i style="font-size:13px;">
+                Predictions assume the uploaded image matches the expected medical imaging type.
+                </i>
+            </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.session_state.confirm_input = st.checkbox(
+        "I confirm that the uploaded image matches the required medical imaging type."
+    )
 
 # -------------------------------
 # IMAGE UPLOAD
@@ -125,7 +179,10 @@ st.write("")
 # -------------------------------
 # RUN PREDICTION
 # -------------------------------
-if st.button("🔍 Run Prediction", disabled=(uploaded_image is None)):
+if st.button(
+    "🔍 Run Prediction",
+    disabled=(uploaded_image is None or not st.session_state.confirm_input)
+):
 
     with st.spinner("Running prediction..."):
         files = {"file": uploaded_image}
@@ -147,21 +204,24 @@ if st.session_state.prediction_result:
 
     st.markdown(
         f"""
-        <div style="
+            <div style="
             background-color:white;
             border-radius:15px;
             padding:30px;
             box-shadow:0 4px 14px rgba(0,0,0,0.35);
             margin-top:30px;
             text-align:center;
-        ">
+            ">
             <h2 style="color:#9f1f38; font-size:32px;">
                 {result['prediction']}
             </h2>
             <h3 style="color:#9f1f38;">
                 Confidence: {confidence_pct}%
             </h3>
-        </div>
+            <p style="font-size:14px; color:#444;">
+                This result assumes a valid medical image was provided.
+            </p>
+            </div>
         """,
         unsafe_allow_html=True
     )
@@ -204,7 +264,7 @@ if st.session_state.prediction_result:
             box-shadow: 0 3px 8px rgba(0,0,0,0.3);
         ">
             ⚠️ <b>Important Reminder:</b><br>
-            AI results are only supportive insights.<br>
+            AI-assisted results are supportive insights only.<br>
             Always consult a qualified medical professional.
         </div>
         """,

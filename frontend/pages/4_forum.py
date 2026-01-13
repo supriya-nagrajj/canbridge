@@ -89,22 +89,22 @@ st.markdown(
 
 communities = {
     "🩺 Breast Cancer": [
-        ("👽 Reddit", "https://www.reddit.com/r/breastcancer/"),
-        ("📨 Telegram", "https://t.me/s/breastcancer_support"),
-        ("💚 WhatsApp", "https://chat.whatsapp.com/"),
-        ("🎥 YouTube", "https://www.youtube.com/@breastcancerorg")
+        ("Reddit", "https://www.reddit.com/r/breastcancer/"),
+        ("Telegram", "https://t.me/s/breastcancer_support"),
+        ("WhatsApp", "https://chat.whatsapp.com/"),
+        ("YouTube", "https://www.youtube.com/@breastcancerorg")
     ],
     "🧠 Brain Tumor": [
-        ("👽 Reddit", "https://www.reddit.com/r/braintumor/"),
-        ("📨 Telegram", "https://t.me/s/braincancer"),
-        ("💚 WhatsApp", "https://chat.whatsapp.com/"),
-        ("🎥 YouTube", "https://www.youtube.com/results?search_query=brain+tumor+survivor")
+        ("Reddit", "https://www.reddit.com/r/braintumor/"),
+        ("Telegram", "https://t.me/s/braincancer"),
+        ("WhatsApp", "https://chat.whatsapp.com/"),
+        ("YouTube", "https://www.youtube.com/results?search_query=brain+tumor+survivor")
     ],
-    "🫁 Lung Cancer": [
-        ("👽 Reddit", "https://www.reddit.com/r/lungcancer/"),
-        ("📨 Telegram", "https://t.me/s/lungcancer"),
-        ("💚 WhatsApp", "https://chat.whatsapp.com/"),
-        ("🎥 YouTube", "https://www.youtube.com/results?search_query=lung+cancer+survivor")
+    "🖐🏻 Skin Cancer": [
+        ("Reddit", "https://www.reddit.com/r/skincancer/"),
+        ("Telegram", "https://t.me/s/skincancer"),
+        ("WhatsApp", "https://chat.whatsapp.com/"),
+        ("YouTube", "https://www.youtube.com/results?search_query=skin+cancer+survivor")
     ]
 }
 
